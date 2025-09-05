@@ -1,14 +1,17 @@
-import { Bell, Lock, Shield, Users, KeyRound, Globe, HelpCircle, LogOut } from "lucide-react";
+"use client";
+import { LuBell, LuLock, LuShield, LuUsers, LuKeyRound, LuGlobe, LuCircleAlert, LuLogOut } from "react-icons/lu";
+import { useRouter } from "next/navigation";
 
 export default function SettingsPage() {
+  const router = useRouter();
   const settingsOptions = [
-    { id: 1, name: "Notifications", icon: <Bell size={18} /> },
-    { id: 2, name: "Change Password", icon: <Lock size={18} /> },
-    { id: 3, name: "Security", icon: <Shield size={18} /> },
-    { id: 4, name: "Friends", icon: <Users size={18} /> },
-    { id: 5, name: "Enable Two Step Verification", icon: <KeyRound size={18} /> },
-    { id: 6, name: "Display and languages", icon: <Globe size={18} /> },
-    { id: 7, name: "Help", icon: <HelpCircle size={18} /> },
+    { id: 1, name: "Notifications", icon: <LuBell size={18} /> },
+    { id: 2, name: "Change Password", icon: <LuLock size={18} /> },
+    { id: 3, name: "Security", icon: <LuShield size={18} /> },
+    { id: 4, name: "Friends", icon: <LuUsers size={18} /> },
+    { id: 5, name: "Enable Two Step Verification", icon: <LuKeyRound size={18} /> },
+    { id: 6, name: "Display and languages", icon: <LuGlobe size={18} /> },
+    { id: 7, name: "Help", icon: <LuCircleAlert size={18} /> },
   ];
 
   return (
@@ -23,7 +26,7 @@ export default function SettingsPage() {
           >
             <div className="flex items-center gap-3">
               {option.icon}
-              <span className="font-medium">{option.name}</span>
+              <span className="font-medium text-gray-800">{option.name}</span>
             </div>
             <span className="text-gray-400">{">"}</span>
           </div>
@@ -32,8 +35,16 @@ export default function SettingsPage() {
 
       {/* Logout */}
       <div className="mt-8 flex justify-center">
-        <button className="flex items-center gap-2 text-gray-700 hover:text-red-600">
-          <LogOut size={18} /> Logout
+        <button
+          onClick={() => {
+            try {
+              localStorage.clear();
+            } catch {}
+            router.push("/signin");
+          }}
+          className="flex items-center gap-2 text-gray-700 hover:text-red-600"
+        >
+          <LuLogOut size={18} /> Logout
         </button>
       </div>
     </div>

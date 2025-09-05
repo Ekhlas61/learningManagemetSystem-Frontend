@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 export default function OTPPage() {
   const [otp, setOtp] = useState(Array(6).fill(""));
+  const [email, setEmail] = useState("");
+  const [resent, setResent] = useState(false);
 
   const handleChange = (value: string, index: number) => {
     if (/^[0-9]?$/.test(value)) {
@@ -16,22 +18,33 @@ export default function OTPPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert("Entered OTP: " + otp.join(""));
+    const entered = otp.join("");
+    const stored = typeof window !== "undefined" ? localStorage.getItem("mock-otp") : null;
+    if (stored && entered === stored) {
+      try {
+        localStorage.removeItem("mock-otp");
+      } catch {}
+      window.location.href = "/dashboard";
+    } else {
+      alert("Invalid OTP. Please try again.");
+    }
   };
+
+  useEffect(() => {
+    try {
+      const savedEmail = localStorage.getItem("mock-email");
+      if (savedEmail) setEmail(savedEmail);
+    } catch {}
+  }, []);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#e6f2f5]">
-      <div className="bg-white p-8 rounded-2xl shadow-lg w-[400px] text-center">
+      <div className="bg-white p-8 rounded-2xl shadow-lg w[400px] text-center">
         {/* Logo */}
-        <img
-          src="/logo.png"
-          alt="Logo"
-          className="mx-auto mb-4 w-24 h-24 object-contain"
-        />
+        <img src="/logo.jpg" alt="Logo" className="mx-auto mb-4 w-24 h-24 object-contain" />
 
-        <h2 className="text-lg font-semibold mb-4">
-          Sent OTP on Your Email
-        </h2>
+        <h2 className="text-lg font-semibold mb-1">Verify your email</h2>
+        <p className="text-sm text-gray-600 mb-4">We sent a 6-digit code to {email || "your email"}.</p>
 
         {/* OTP Inputs */}
         <form onSubmit={handleSubmit}>
@@ -50,9 +63,16 @@ export default function OTPPage() {
 
           <button
             type="button"
+            onClick={() => {
+              const generatedOtp = Array.from({ length: 6 }, () => Math.floor(Math.random() * 10)).join("");
+              try {
+                localStorage.setItem("mock-otp", generatedOtp);
+                setResent(true);
+              } catch {}
+            }}
             className="text-sm text-blue-600 hover:underline mb-5"
           >
-            Resend OTP
+            {resent ? "OTP resent!" : "Resend OTP"}
           </button>
 
           <button
@@ -63,8 +83,8 @@ export default function OTPPage() {
           </button>
         </form>
 
-        <Link href="/login" className="block mt-4 text-sm text-gray-600 hover:underline">
-          Back to Login Page
+        <Link href="/signin" className="block mt-4 text-sm text-gray-600 hover:underline">
+          Back to sign in
         </Link>
       </div>
     </div>

@@ -5,12 +5,13 @@ const sampleMessages = [
 
 export default function MessagesPage() {
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Messages</h1>
+    <div className="text-gray-800">
+      <h1 className="text-2xl font-bold mb-4 text-gray-900">Messages</h1>
       <ul className="space-y-2">
         {sampleMessages.map((m) => (
           <li key={m.id} className="p-3 bg-white rounded shadow">
-            <strong>{m.from}:</strong> {m.text}
+            <strong className="text-gray-900">{m.from}:</strong>{" "}
+            <span className="text-gray-800">{m.text}</span>
           </li>
         ))}
       </ul>
