@@ -8,11 +8,11 @@ A modern, responsive Learning Management System built with Next.js 15, React 19,
   - Role: Frontend development,  user interface implementation
   - Contributions: Dashboard layout, settings page, forum, timetable, messages, notifications, and other frontend components
 
-- **Eyerusalem** - Frontend Developer  
+- **Eyerusalem Adugnaw** - Frontend Developer  
   - Role: Frontend development,  authentication flow, core page implementation
   - Contributions: Home page, courses pages, assignment pages, authentication pages (sign-in/sign-up/OTP)
 
-- **Kidus** - Backend Developer
+- **Kidus Berhane** - Backend Developer
   - Role: Backend development, API design, database management, server-side logic
   - Contributions: Backend architecture, data modeling, API endpoints, authentication system
 
@@ -41,7 +41,7 @@ A modern, responsive Learning Management System built with Next.js 15, React 19,
 
 ## Demo Video
 
-[![Demo Video](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=VIDEO_ID)
+[https://drive.google.com/file/d/1pYkS7x2oXhq2dJyfKko0l8uH6rm77KJN/view?usp=sharing]
 
 *Note: Replace VIDEO_ID with your actual YouTube video ID. Upload a screen recording showing:*
 - User registration and OTP verification flow
