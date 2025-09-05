@@ -1,6 +1,7 @@
 "use client";
 import { LuBell, LuLock, LuShield, LuUsers, LuKeyRound, LuGlobe, LuCircleAlert, LuLogOut } from "react-icons/lu";
 import { useRouter } from "next/navigation";
+import { authService } from "@/lib/auth";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -37,9 +38,7 @@ export default function SettingsPage() {
       <div className="mt-8 flex justify-center">
         <button
           onClick={() => {
-            try {
-              localStorage.clear();
-            } catch {}
+            authService.logout();
             router.push("/signin");
           }}
           className="flex items-center gap-2 text-gray-700 hover:text-red-600"

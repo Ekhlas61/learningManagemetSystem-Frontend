@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
+import { authService } from "@/lib/auth";
 
 export default function Signup() {
   const router = useRouter();
@@ -10,20 +11,21 @@ export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // 👉 fake validation (replace with real API later)
-    if (username && email && password) {
-      // Generate and store mock OTP for demo
-      const generatedOtp = Array.from({ length: 6 }, () => Math.floor(Math.random() * 10)).join("");
-      try {
-        localStorage.setItem("mock-otp", generatedOtp);
-        localStorage.setItem("mock-email", email);
-      } catch {}
-      router.push("/otp"); // after signup, go to OTP
-    } else {
-      alert("Please fill all fields");
+    setLoading(true);
+    setError("");
+
+    try {
+      await authService.register(username, email, password);
+      router.push("/dashboard");
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -50,6 +52,13 @@ export default function Signup() {
 
         {/* Heading */}
         <h2 className="text-2xl font-bold text-gray-700">Sign Up</h2>
+
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {error}
+          </div>
+        )}
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4" aria-labelledby="signup-title">
@@ -107,9 +116,10 @@ export default function Signup() {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-700 text-white py-2 rounded-lg hover:bg-blue-800 transition"
+            disabled={loading}
+            className="w-full bg-blue-700 text-white py-2 rounded-lg hover:bg-blue-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Sign Up
+            {loading ? "Creating Account..." : "Sign Up"}
           </button>
         </form>
 

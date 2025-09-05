@@ -3,21 +3,28 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { authService } from "@/lib/auth";
 
 export default function SignInPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // 👉 fake login logic (replace later with real API)
-    if (email && password) {
-      // redirect to dashboard
+    setLoading(true);
+    setError("");
+
+    try {
+      await authService.login(email, password);
       router.push("/dashboard");
-    } else {
-      alert("Please enter email and password");
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,6 +51,13 @@ export default function SignInPage() {
         <h1 id="signin-title" className="text-2xl font-bold text-center text-gray-700 mb-4">
           Sign In
         </h1>
+
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {error}
+          </div>
+        )}
 
         {/* Inputs */}
         <div className="space-y-2">
@@ -96,9 +110,10 @@ export default function SignInPage() {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-blue-700 text-white py-2 rounded-lg hover:bg-blue-800 transition"
+          disabled={loading}
+          className="w-full bg-blue-700 text-white py-2 rounded-lg hover:bg-blue-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Sign In
+          {loading ? "Signing In..." : "Sign In"}
         </button>
       </form>
 

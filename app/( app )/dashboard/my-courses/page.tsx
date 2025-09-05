@@ -1,16 +1,52 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { coursesService, Course, Enrollment } from "@/lib/courses";
 
-interface Course {
-  module: string;
-  name: string;
-  unit: number;
+interface CourseWithStatus extends Course {
   status: "Completed" | "Ongoing" | "Not Started";
 }
 
 export default function MyCourses() {
+  const [courses, setCourses] = useState<CourseWithStatus[]>([]);
+  const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // Fetch courses and enrollments on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [coursesData, enrollmentsData] = await Promise.all([
+          coursesService.getCourses(),
+          coursesService.getEnrollments()
+        ]);
+        
+        // Map courses with status based on enrollments
+        const coursesWithStatus = coursesData.map(course => ({
+          ...course,
+          status: enrollmentsData.find(e => e.courseId === course.id) ? "Ongoing" : "Not Started"
+        }));
+        
+        setCourses(coursesWithStatus);
+        setEnrollments(enrollmentsData);
+      } catch (err: any) {
+        setError(err.message);
+        // Fallback to static data if API fails
+        setCourses([
+          { id: "1", title: "Mathematics I", description: "Basic mathematics", instructor: "Dr. Smith", duration: "3 months", level: "Beginner", createdAt: "", updatedAt: "", status: "Ongoing" },
+          { id: "2", title: "Introduction to Computing", description: "Computer science basics", instructor: "Dr. Johnson", duration: "4 months", level: "Beginner", createdAt: "", updatedAt: "", status: "Completed" }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const semesters = [
     {
       name: "Semester 1",
