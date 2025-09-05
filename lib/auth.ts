@@ -23,8 +23,11 @@ export const authService = {
       Cookies.set('token', response.token, { expires: 7 }); // 7 days
       
       return response;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Login failed');
+    } catch (error: unknown) {
+      const message = error && typeof error === 'object' && 'response' in error 
+        ? (error as { response?: { data?: { message?: string } } }).response?.data?.message 
+        : 'Login failed';
+      throw new Error(message || 'Login failed');
     }
   },
 
@@ -37,8 +40,11 @@ export const authService = {
       Cookies.set('token', response.token, { expires: 7 }); // 7 days
       
       return response;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Registration failed');
+    } catch (error: unknown) {
+      const message = error && typeof error === 'object' && 'response' in error 
+        ? (error as { response?: { data?: { message?: string } } }).response?.data?.message 
+        : 'Registration failed';
+      throw new Error(message || 'Registration failed');
     }
   },
 
@@ -57,7 +63,7 @@ export const authService = {
       
       const response = await authAPI.getCurrentUser();
       return response.user;
-    } catch (error) {
+    } catch {
       // Token might be invalid, clear it
       authAPI.logout();
       return null;

@@ -28,11 +28,14 @@ api.interceptors.request.use(
 // Add response interceptor to handle token expiration
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      // Token expired or invalid, redirect to login
-      Cookies.remove('token');
-      window.location.href = '/signin';
+  (error: unknown) => {
+    if (error && typeof error === 'object' && 'response' in error) {
+      const axiosError = error as { response?: { status?: number } };
+      if (axiosError.response?.status === 401) {
+        // Token expired or invalid, redirect to login
+        Cookies.remove('token');
+        window.location.href = '/signin';
+      }
     }
     return Promise.reject(error);
   }
@@ -95,7 +98,7 @@ export const assignmentsAPI = {
     return response.data;
   },
   
-  submitAssignment: async (assignmentId: string, answers: any) => {
+  submitAssignment: async (assignmentId: string, answers: Record<string, unknown>) => {
     const response = await api.post(`/assignments/${assignmentId}/submit`, { answers });
     return response.data;
   }

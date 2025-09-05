@@ -22,8 +22,8 @@ export default function Signup() {
     try {
       await authService.register(username, email, password);
       router.push("/dashboard");
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      setError(error instanceof Error ? error.message : 'Registration failed');
     } finally {
       setLoading(false);
     }

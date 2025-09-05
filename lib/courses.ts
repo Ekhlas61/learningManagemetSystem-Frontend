@@ -26,8 +26,11 @@ export const coursesService = {
     try {
       const response = await coursesAPI.getCourses();
       return response.courses || response;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch courses');
+    } catch (error: unknown) {
+      const message = error && typeof error === 'object' && 'response' in error 
+        ? (error as { response?: { data?: { message?: string } } }).response?.data?.message 
+        : 'Failed to fetch courses';
+      throw new Error(message || 'Failed to fetch courses');
     }
   },
 
@@ -36,8 +39,11 @@ export const coursesService = {
     try {
       const response = await coursesAPI.getCourse(id);
       return response.course || response;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch course');
+    } catch (error: unknown) {
+      const message = error && typeof error === 'object' && 'response' in error 
+        ? (error as { response?: { data?: { message?: string } } }).response?.data?.message 
+        : 'Failed to fetch course';
+      throw new Error(message || 'Failed to fetch course');
     }
   },
 
@@ -46,8 +52,11 @@ export const coursesService = {
     try {
       const response = await coursesAPI.enroll(courseId);
       return response.enrollment || response;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Failed to enroll in course');
+    } catch (error: unknown) {
+      const message = error && typeof error === 'object' && 'response' in error 
+        ? (error as { response?: { data?: { message?: string } } }).response?.data?.message 
+        : 'Failed to enroll in course';
+      throw new Error(message || 'Failed to enroll in course');
     }
   },
 
@@ -56,8 +65,11 @@ export const coursesService = {
     try {
       const response = await coursesAPI.getEnrollments();
       return response.enrollments || response;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch enrollments');
+    } catch (error: unknown) {
+      const message = error && typeof error === 'object' && 'response' in error 
+        ? (error as { response?: { data?: { message?: string } } }).response?.data?.message 
+        : 'Failed to fetch enrollments';
+      throw new Error(message || 'Failed to fetch enrollments');
     }
   }
 };

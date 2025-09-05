@@ -14,6 +14,11 @@ export default function MyCourses() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // Display error if any
+  if (error) {
+    console.warn('Courses API Error:', error);
+  }
+
   // Fetch courses and enrollments on component mount
   useEffect(() => {
     const fetchData = async () => {
@@ -25,15 +30,15 @@ export default function MyCourses() {
         ]);
         
         // Map courses with status based on enrollments
-        const coursesWithStatus = coursesData.map(course => ({
+        const coursesWithStatus: CourseWithStatus[] = coursesData.map(course => ({
           ...course,
-          status: enrollmentsData.find(e => e.courseId === course.id) ? "Ongoing" : "Not Started"
+          status: (enrollmentsData.find(e => e.courseId === course.id) ? "Ongoing" : "Not Started") as "Completed" | "Ongoing" | "Not Started"
         }));
         
         setCourses(coursesWithStatus);
         setEnrollments(enrollmentsData);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
         // Fallback to static data if API fails
         setCourses([
           { id: "1", title: "Mathematics I", description: "Basic mathematics", instructor: "Dr. Smith", duration: "3 months", level: "Beginner", createdAt: "", updatedAt: "", status: "Ongoing" },

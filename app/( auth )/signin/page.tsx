@@ -21,8 +21,8 @@ export default function SignInPage() {
     try {
       await authService.login(email, password);
       router.push("/dashboard");
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      setError(error instanceof Error ? error.message : 'Login failed');
     } finally {
       setLoading(false);
     }

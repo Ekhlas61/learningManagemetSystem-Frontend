@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function OTPPage() {
   const [otp, setOtp] = useState(Array(6).fill(""));
@@ -41,7 +42,7 @@ export default function OTPPage() {
     <div className="flex items-center justify-center min-h-screen bg-[#e6f2f5]">
       <div className="bg-white p-8 rounded-2xl shadow-lg w[400px] text-center">
         {/* Logo */}
-        <img src="/logo.jpg" alt="Logo" className="mx-auto mb-4 w-24 h-24 object-contain" />
+        <Image src="/logo.jpg" alt="Logo" width={96} height={96} className="mx-auto mb-4 object-contain" />
 
         <h2 className="text-lg font-semibold mb-1">Verify your email</h2>
         <p className="text-sm text-gray-600 mb-4">We sent a 6-digit code to {email || "your email"}.</p>
